@@ -1,18 +1,19 @@
 #pragma once
 
-#include "Textures.hpp"
+#include "Resources.hpp"
+#include "ResourceID.hpp"
 namespace Qy
 {
     class Game
     {
     private:
         //data
-        sf::RenderWindow window;
-        Textures::TextureHolder textures;
-        sf::Sprite playerPlane;
-        sf::Time TimePerFrame;
-        bool isMovingUp, isMovingDown, isMovingRight, isMovingLeft;
-        float playerSpeed = 200.f;
+        sf::RenderWindow mWindow;
+        ResourceHolder<sf::Texture,Textures::ID> mTextures;
+        sf::Sprite mPlayerPlane;
+        sf::Time mTimePerFrame;
+        bool mIsMovingUp, mIsMovingDown, mIsMovingRight, mIsMovingLeft;
+        float mPlayerSpeed = 200.f;
         //method
         void processEvents();
         void update(sf::Time deltaTime);
@@ -24,13 +25,13 @@ namespace Qy
         ~Game();
         void run();
     };
-    Game::Game(float FPS) : window(sf::VideoMode(480, 640), "Space Shooter", sf::Style::Close), TimePerFrame(sf::seconds(1.f / FPS)),
-                            isMovingUp(false), isMovingDown(false), isMovingRight(false), isMovingLeft(false),playerPlane()
+    Game::Game(float FPS) : mWindow(sf::VideoMode(480, 640), "Space Shooter", sf::Style::Close), mTimePerFrame(sf::seconds(1.f / FPS)),
+                            mIsMovingUp(false), mIsMovingDown(false), mIsMovingRight(false), mIsMovingLeft(false),mPlayerPlane()
     {
-        textures.load(Textures::ID::Airplane, "src\\game\\media\\assest\\spritesheets\\ship.png");
-        playerPlane.setTexture(textures.get(Textures::ID::Airplane));
-        playerPlane.setScale(2.f, 2.f);
-        playerPlane.setPosition(640 / 2 - 20, 480 / 2 - 20);
+        mTextures.load(Textures::ID::Airplane, "src\\game\\media\\assest\\spritesheets\\ship.png",sf::IntRect(32,0,16,24));
+        mPlayerPlane.setTexture(mTextures.get(Textures::ID::Airplane));
+        mPlayerPlane.setScale(2.f, 2.f);
+        mPlayerPlane.setPosition(480 / 2 - 20, 640 - 48);
     }
 
     Game::~Game()
@@ -40,16 +41,16 @@ namespace Qy
     {
         sf::Clock clock;
         sf::Time timeFromLastUpdate = sf::Time::Zero;
-        while (window.isOpen())
+        while (mWindow.isOpen())
         {
             // sf::Time deltaTime = clock.restart();
             processEvents();
             timeFromLastUpdate += clock.restart();
-            while (timeFromLastUpdate > TimePerFrame)
+            while (timeFromLastUpdate > mTimePerFrame)
             {
-                timeFromLastUpdate -= TimePerFrame;
+                timeFromLastUpdate -= mTimePerFrame;
                 processEvents();
-                update(TimePerFrame);
+                update(mTimePerFrame);
             }
 
             render();
@@ -58,7 +59,7 @@ namespace Qy
     void Game::processEvents()
     {
         sf::Event event;
-        while (window.pollEvent(event))
+        while (mWindow.pollEvent(event))
         {
             switch (event.type)
             {
@@ -71,7 +72,7 @@ namespace Qy
                 break;
 
             case sf::Event::Closed:
-                window.close();
+                mWindow.close();
                 break;
 
             default:
@@ -83,42 +84,42 @@ namespace Qy
     {
         if (key == sf::Keyboard::W || key == sf::Keyboard::Up)
         {
-            isMovingUp = isPressed;
+            mIsMovingUp = isPressed;
         }
 
         else if (key == sf::Keyboard::S || key == sf::Keyboard::Down)
         {
-            isMovingDown = isPressed;
+            mIsMovingDown = isPressed;
         }
 
         else if (key == sf::Keyboard::A || key == sf::Keyboard::Left)
         {
-            isMovingLeft = isPressed;
+            mIsMovingLeft = isPressed;
         }
 
         else if (key == sf::Keyboard::D || key == sf::Keyboard::Right)
         {
-            isMovingRight = isPressed;
+            mIsMovingRight = isPressed;
         }
     }
     void Game::update(sf::Time deltaTime)
     {
         sf::Vector2f movement(0.f, 0.f);
-        if (isMovingUp)
-            movement.y -= playerSpeed;
-        if (isMovingDown)
-            movement.y += playerSpeed;
-        if (isMovingLeft)
-            movement.x -= playerSpeed;
-        if (isMovingRight)
-            movement.x += playerSpeed;
-        playerPlane.move(movement * deltaTime.asSeconds());
+        if (mIsMovingUp)
+            movement.y -= mPlayerSpeed;
+        if (mIsMovingDown)
+            movement.y += mPlayerSpeed;
+        if (mIsMovingLeft)
+            movement.x -= mPlayerSpeed;
+        if (mIsMovingRight)
+            movement.x += mPlayerSpeed;
+        mPlayerPlane.move(movement * deltaTime.asSeconds());
     }
     void Game::render()
     {
-        window.clear();
-        window.draw(playerPlane);
-        window.display();
+        mWindow.clear();
+        mWindow.draw(mPlayerPlane);
+        mWindow.display();
     }
 
 } // namespace Qy
