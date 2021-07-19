@@ -9,19 +9,8 @@ public:
     sf::Vector2f getVelocity() const;
 
 private:
+    virtual void updateCurrent(sf::Time dt);
+
+private:
     sf::Vector2f mVelocity;
 };
-
-void Entity::setVelocity(sf::Vector2f velocity)
-{
-    mVelocity = velocity;
-}
-void Entity::setVelocity(float vx, float vy)
-{
-    mVelocity.x = vx;
-    mVelocity.y = vy;
-}
-sf::Vector2f Entity::getVelocity() const
-{
-    return mVelocity;
-}

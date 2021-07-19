@@ -2,7 +2,7 @@
 
 int main()
 {
-    Qy::Game game;
+    Game game;
     game.run();
 
     return 0;

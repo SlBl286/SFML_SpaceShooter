@@ -6,7 +6,9 @@ namespace Textures
     {
         Lanscape,
         Airplane,
-        Missile
+        Missile,
+        Eagle,
+        Raptor,
     };
 } // namespace Resources
 

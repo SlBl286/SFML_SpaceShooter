@@ -1,14 +1,7 @@
 #pragma once
 #include "Extends/Base.hpp"
 #include "src\game\Resources.hpp"
-namespace Textures
-{
-    enum class ID
-    {
-        Eagle,
-        Raptor,
-    };
-}
+#include "src/game/ResourceID.hpp"
 class Aircraft : public Entity
 {
 public:
@@ -37,12 +30,13 @@ public:
 private:
     Type mType;
     sf::Sprite mSprite;
-    sf::FloatRect bounds = mSprite.getLocalBounds();
     
 };
 
 Aircraft::Aircraft(Type type, const TextureHolder &textures) : mType(type), mSprite(textures.get(toTextureID(type)))
 {
+
+    sf::FloatRect bounds = mSprite.getLocalBounds();
     mSprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
 }
 
