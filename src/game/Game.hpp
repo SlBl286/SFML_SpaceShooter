@@ -6,14 +6,14 @@ namespace Qy
     class Game
     {
     private:
-        //data
-        sf::RenderWindow window;
+        // data
+        sf::RenderWindow mWindow;
         Textures::TextureHolder textures;
         sf::Sprite playerPlane;
         sf::Time TimePerFrame;
         bool isMovingUp, isMovingDown, isMovingRight, isMovingLeft;
         float playerSpeed = 200.f;
-        //method
+        // method
         void processEvents();
         void update(sf::Time deltaTime);
         void render();
@@ -24,12 +24,13 @@ namespace Qy
         ~Game();
         void run();
     };
-    Game::Game(float FPS) : window(sf::VideoMode(480, 640), "Space Shooter", sf::Style::Close), TimePerFrame(sf::seconds(1.f / FPS)),
-                            isMovingUp(false), isMovingDown(false), isMovingRight(false), isMovingLeft(false),playerPlane()
+    Game::Game(float FPS) : mWindow(sf::VideoMode(480, 640), "Space Shooter", sf::Style::Close), TimePerFrame(sf::seconds(1.f / FPS)),
+                            isMovingUp(false), isMovingDown(false), isMovingRight(false), isMovingLeft(false), playerPlane()
     {
-        textures.load(Textures::ID::Airplane, "src\\game\\media\\assest\\spritesheets\\ship.png");
+        textures.load(Textures::ID::Airplane, "assets/images/playerShip1_blue.png");
         playerPlane.setTexture(textures.get(Textures::ID::Airplane));
-        playerPlane.setScale(2.f, 2.f);
+        playerPlane.setScale(0.5f, 0.5f);
+        // playerPlane.setTextureRect(sf::IntRct(16, 0, 16, 24));
         playerPlane.setPosition(640 / 2 - 20, 480 / 2 - 20);
     }
 
@@ -40,7 +41,7 @@ namespace Qy
     {
         sf::Clock clock;
         sf::Time timeFromLastUpdate = sf::Time::Zero;
-        while (window.isOpen())
+        while (mWindow.isOpen())
         {
             // sf::Time deltaTime = clock.restart();
             processEvents();
@@ -58,7 +59,7 @@ namespace Qy
     void Game::processEvents()
     {
         sf::Event event;
-        while (window.pollEvent(event))
+        while (mWindow.pollEvent(event))
         {
             switch (event.type)
             {
@@ -71,7 +72,7 @@ namespace Qy
                 break;
 
             case sf::Event::Closed:
-                window.close();
+                mWindow.close();
                 break;
 
             default:
@@ -116,9 +117,9 @@ namespace Qy
     }
     void Game::render()
     {
-        window.clear();
-        window.draw(playerPlane);
-        window.display();
+        mWindow.clear();
+        mWindow.draw(playerPlane);
+        mWindow.display();
     }
 
 } // namespace Qy

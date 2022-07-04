@@ -2,6 +2,7 @@
 #include <map>
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <assert.h>
 namespace Textures
 {
     enum class ID
@@ -19,15 +20,17 @@ namespace Textures
 
     public:
         void load(Textures::ID id, const std::string &filename);
-        const sf::Texture& get(Textures::ID id) const;
+        const sf::Texture &get(Textures::ID id) const;
         sf::Texture &get(Textures::ID id);
     };
 
     void TextureHolder::load(Textures::ID id, const std::string &filename)
     {
         std::unique_ptr<sf::Texture> texture(new sf::Texture());
-        texture->loadFromFile(filename);
-        mTextureMap.insert(std::make_pair(id, std::move(texture)));
+        if (!texture->loadFromFile(filename))
+            throw std::runtime_error("TextureHolder::load - Failed to load " + filename);
+        auto inserted = mTextureMap.insert(std::make_pair(id, std::move(texture)));
+        assert(inserted.second);
     }
     sf::Texture &TextureHolder::get(Textures::ID id)
     {
