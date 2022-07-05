@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Textures.hpp"
+#include "Resource.hpp"
+#include "Entities/Aircraft.hpp"
 namespace Qy
 {
     class Game
@@ -8,8 +10,8 @@ namespace Qy
     private:
         // data
         sf::RenderWindow mWindow;
-        Textures::TextureHolder textures;
-        sf::Sprite playerPlane;
+        ResourceHolder<sf::Texture, Textures::ID> textures;
+        Aircraft playerPlane;
         sf::Time TimePerFrame;
         bool isMovingUp, isMovingDown, isMovingRight, isMovingLeft;
         float playerSpeed = 200.f;
@@ -25,13 +27,9 @@ namespace Qy
         void run();
     };
     Game::Game(float FPS) : mWindow(sf::VideoMode(480, 640), "Space Shooter", sf::Style::Close), TimePerFrame(sf::seconds(1.f / FPS)),
-                            isMovingUp(false), isMovingDown(false), isMovingRight(false), isMovingLeft(false), playerPlane()
+                            isMovingUp(false), isMovingDown(false), isMovingRight(false), isMovingLeft(false), playerPlane(Aircraft::Type::Eagle, textures)
     {
-        textures.load(Textures::ID::Airplane, "assets/images/playerShip1_blue.png");
-        playerPlane.setTexture(textures.get(Textures::ID::Airplane));
-        playerPlane.setScale(0.5f, 0.5f);
-        // playerPlane.setTextureRect(sf::IntRct(16, 0, 16, 24));
-        playerPlane.setPosition(640 / 2 - 20, 480 / 2 - 20);
+        textures.load(Textures::ID::Eagle, "assets/images/playerShip1_blue.png");
     }
 
     Game::~Game()
@@ -43,7 +41,6 @@ namespace Qy
         sf::Time timeFromLastUpdate = sf::Time::Zero;
         while (mWindow.isOpen())
         {
-            // sf::Time deltaTime = clock.restart();
             processEvents();
             timeFromLastUpdate += clock.restart();
             while (timeFromLastUpdate > TimePerFrame)

@@ -1,4 +1,3 @@
-#include <SFML/Graphics.hpp>
 #include "src/game/Game.hpp"
 
 int main()

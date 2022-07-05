@@ -45,6 +45,13 @@
     "typeinfo": "cpp",
     "ios": "cpp",
     "*.rh": "cpp",
-    "xtree": "cpp"
+    "xtree": "cpp",
+    "xlocmes": "cpp",
+    "xlocmon": "cpp",
+    "xlocnum": "cpp",
+    "xloctime": "cpp",
+    "xutility": "cpp",
+    "locale": "cpp",
+    "xlocale": "cpp"
   }
 }
