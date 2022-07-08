@@ -5,7 +5,7 @@ class Aircraft : public Entity
 {
     // data
 public:
-    typedef ResourceHolder<sf::Texture, Textures::ID> TextureHolder;
+    typedef ResourceHolder<sf::Texture, ResourceId::Textures> TextureHolder;
     enum Type
     {
         Eagle,
@@ -17,7 +17,7 @@ private:
     sf::Sprite mSprite;
     // function
 private:
-    Textures::ID toTextureID(Aircraft::Type type);
+    ResourceId::Textures toTextureID(Aircraft::Type type);
 
 public:
     explicit Aircraft(Type type, const TextureHolder &textures);
@@ -33,16 +33,17 @@ void Aircraft::drawCurrent(sf::RenderTarget &target, sf::RenderStates states) co
 Aircraft::Aircraft(Type type, const TextureHolder &textures) : mType(type), mSprite(textures.get(toTextureID(type)))
 {
     sf::FloatRect bounds = mSprite.getLocalBounds();
+    mSprite.setScale(0.5f, 0.5f);
     mSprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
 }
-Textures::ID Aircraft::toTextureID(Aircraft::Type type)
+ResourceId::Textures Aircraft::toTextureID(Aircraft::Type type)
 {
     switch (type)
     {
     case Aircraft::Eagle:
-        return Textures::ID::Eagle;
+        return ResourceId::Textures::Eagle;
     case Aircraft::Raptor:
-        return Textures::ID::Raptor;
+        return ResourceId::Textures::Raptor;
     default:
         break;
     }

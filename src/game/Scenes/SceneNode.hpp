@@ -10,13 +10,13 @@ public:
 
 private:
     std::vector<Ptr> mChildren;
-    SceneNode *mParent;
+    SceneNode*       mParent;
     // function
 private:
-    virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const final;
-    virtual void drawCurrent(sf::RenderTarget &target, sf::RenderStates states) const;
-    virtual void updateCurrent(sf::Time dt);
-    virtual void updateChildren(sf::Time dt);
+    virtual void     draw(sf::RenderTarget &target, sf::RenderStates states) const final;
+    virtual void     drawCurrent(sf::RenderTarget &target, sf::RenderStates states) const;
+    virtual void     updateCurrent(sf::Time dt);
+    virtual void     updateChildren(sf::Time dt);
 
 public:
     void update(sf::Time dt);
@@ -54,7 +54,9 @@ void SceneNode::updateChildren(sf::Time dt)
     for (const Ptr &child : mChildren)
         child->update(dt);
 }
-void SceneNode::drawCurrent(sf::RenderTarget &target, sf::RenderStates states) const {}
+void SceneNode::drawCurrent(sf::RenderTarget &target, sf::RenderStates states) const {
+    
+}
 void SceneNode::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     states.transform *= getTransform();

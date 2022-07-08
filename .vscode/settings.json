@@ -52,6 +52,18 @@
     "xloctime": "cpp",
     "xutility": "cpp",
     "locale": "cpp",
-    "xlocale": "cpp"
-  }
+    "xlocale": "cpp",
+    "bit": "cpp",
+    "compare": "cpp",
+    "concepts": "cpp",
+    "cstring": "cpp",
+    "xfacet": "cpp",
+    "xiosbase": "cpp",
+    "xlocbuf": "cpp",
+    "xlocinfo": "cpp",
+    "xmemory": "cpp",
+    "xstddef": "cpp",
+    "xstring": "cpp",
+    "xtr1common": "cpp"
+  },
 }

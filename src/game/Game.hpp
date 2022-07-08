@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Textures.hpp"
 #include "Resource.hpp"
 #include "Entities/Aircraft.hpp"
+#include <World.hpp>
 namespace Qy
 {
     class Game
@@ -10,14 +10,13 @@ namespace Qy
     private:
         // data
         sf::RenderWindow mWindow;
-        ResourceHolder<sf::Texture, Textures::ID> textures;
-        Aircraft playerPlane;
         sf::Time TimePerFrame;
-        bool isMovingUp, isMovingDown, isMovingRight, isMovingLeft;
-        float playerSpeed = 200.f;
+        World mWorld;
+        float playerSpeed;
+        bool mIsPause;
         // method
         void processEvents();
-        void update(sf::Time deltaTime);
+        void update(sf::Time dt);
         void render();
         void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
 
@@ -26,10 +25,12 @@ namespace Qy
         ~Game();
         void run();
     };
-    Game::Game(float FPS) : mWindow(sf::VideoMode(480, 640), "Space Shooter", sf::Style::Close), TimePerFrame(sf::seconds(1.f / FPS)),
-                            isMovingUp(false), isMovingDown(false), isMovingRight(false), isMovingLeft(false), playerPlane(Aircraft::Type::Eagle, textures)
+    Game::Game(float FPS) : mWindow(sf::VideoMode(480, 800), "Space Shooter", sf::Style::Close),
+                            TimePerFrame(sf::seconds(1.f / FPS)),
+                            mWorld(mWindow),
+                            playerSpeed(200.f),
+                            mIsPause(false)
     {
-        textures.load(Textures::ID::Eagle, "assets/images/playerShip1_blue.png");
     }
 
     Game::~Game()
@@ -37,17 +38,24 @@ namespace Qy
     }
     void Game::run()
     {
+        sf::Vector2i windowCenter(mWindow.getSize() / 2u);
+        sf::Vector2i mousePosition = sf::Mouse::getPosition(mWindow);
+        sf::Vector2i delta = windowCenter - mousePosition;
+        sf::Mouse::setPosition(windowCenter, mWindow);
         sf::Clock clock;
         sf::Time timeFromLastUpdate = sf::Time::Zero;
         while (mWindow.isOpen())
         {
+
             processEvents();
             timeFromLastUpdate += clock.restart();
+
             while (timeFromLastUpdate > TimePerFrame)
             {
                 timeFromLastUpdate -= TimePerFrame;
                 processEvents();
-                update(TimePerFrame);
+                if (!mIsPause)
+                    update(TimePerFrame);
             }
 
             render();
@@ -67,55 +75,49 @@ namespace Qy
             case sf::Event::KeyReleased:
                 handlePlayerInput(event.key.code, false);
                 break;
-
+            case sf::Event::LostFocus:
+                std::cout << "background mode";
+                mIsPause = true;
+                break;
+            case sf::Event::GainedFocus:
+                std::cout << "foreground mode";
+                mIsPause = false;
+                break;
             case sf::Event::Closed:
                 mWindow.close();
                 break;
-
+            case sf::Event::JoystickConnected:
+                std::cout << sf::Joystick::ButtonCount << std::endl;
+                break;
             default:
                 break;
             }
         }
     }
+
     void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
     {
-        if (key == sf::Keyboard::W || key == sf::Keyboard::Up)
-        {
-            isMovingUp = isPressed;
-        }
-
-        else if (key == sf::Keyboard::S || key == sf::Keyboard::Down)
-        {
-            isMovingDown = isPressed;
-        }
-
-        else if (key == sf::Keyboard::A || key == sf::Keyboard::Left)
-        {
-            isMovingLeft = isPressed;
-        }
-
-        else if (key == sf::Keyboard::D || key == sf::Keyboard::Right)
-        {
-            isMovingRight = isPressed;
-        }
     }
-    void Game::update(sf::Time deltaTime)
+    void Game::update(sf::Time dt)
     {
         sf::Vector2f movement(0.f, 0.f);
-        if (isMovingUp)
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
             movement.y -= playerSpeed;
-        if (isMovingDown)
-            movement.y += playerSpeed;
-        if (isMovingLeft)
-            movement.x -= playerSpeed;
-        if (isMovingRight)
-            movement.x += playerSpeed;
-        playerPlane.move(movement * deltaTime.asSeconds());
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+            movement.y -= playerSpeed;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+            movement.y -= playerSpeed;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+            movement.y -= playerSpeed;
+
+        mWorld.update(dt);
     }
     void Game::render()
     {
         mWindow.clear();
-        mWindow.draw(playerPlane);
+        mWorld.draw();
+        mWindow.setView(mWindow.getDefaultView());
+
         mWindow.display();
     }
 

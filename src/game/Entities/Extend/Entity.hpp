@@ -1,7 +1,7 @@
 #pragma once
 #include "../../Resource.hpp"
 #include "../../Scenes/SceneNode.hpp"
-#include "../../Textures.hpp"
+#include "../../ResourceEnum.hpp"
 class Entity : public SceneNode
 {
     // data
