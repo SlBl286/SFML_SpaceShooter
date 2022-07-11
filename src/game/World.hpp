@@ -3,6 +3,7 @@
 #include <Resource.hpp>
 #include <array>
 #include <Scenes/SpriteNode.hpp>
+#include "CommandQueue.hpp"
 class World : private sf::NonCopyable
 {
     // data
@@ -28,7 +29,7 @@ private:
     sf::Vector2f mSpawnPosition;
     float mScrollSpeed;
     Aircraft *mPlayerAircraft;
-
+    CommandQueue mCommandQueue;
     // function
 private:
     void loadTextures();
@@ -36,6 +37,7 @@ private:
 
 public:
     explicit World(sf::RenderWindow &window);
+    CommandQueue& getCommandQueue();
     void update(sf::Time dt);
     void draw();
 
@@ -79,7 +81,7 @@ void World::buildScene()
     std::unique_ptr<Aircraft> leader(new Aircraft(Aircraft::Eagle, mTextures));
     mPlayerAircraft = leader.get();
     mPlayerAircraft->setPosition(mSpawnPosition);
-    mPlayerAircraft->setVelocity(sf::Vector2f(0,-100.f));
+    mPlayerAircraft->setVelocity(sf::Vector2f(0, -100.f));
     mSceneLayers[Air]->attachChild(std::move(leader));
     std::unique_ptr<Aircraft> leftEscort(
         new Aircraft(Aircraft::Raptor, mTextures));
@@ -102,12 +104,21 @@ void World::update(sf::Time dt)
         velocity.x = -velocity.x;
         mPlayerAircraft->setVelocity(velocity);
     }
+    while (!mCommandQueue.isEmpty())
+    {
+        mSceneGraph.onCommand(mCommandQueue.pop(), dt);
+    }
+
     mSceneGraph.update(dt);
 }
 void World::draw()
 {
     mWindow.setView(mWorldView);
     mWindow.draw(mSceneGraph);
+}
+
+CommandQueue& World::getCommandQueue(){
+    return mCommandQueue;
 }
 World::~World()
 {

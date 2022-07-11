@@ -18,6 +18,7 @@ private:
     // function
 private:
     ResourceId::Textures toTextureID(Aircraft::Type type);
+    virtual unsigned int getCategory() const;
 
 public:
     explicit Aircraft(Type type, const TextureHolder &textures);
@@ -46,6 +47,17 @@ ResourceId::Textures Aircraft::toTextureID(Aircraft::Type type)
         return ResourceId::Textures::Raptor;
     default:
         break;
+    }
+}
+unsigned int Aircraft::getCategory() const
+{
+    switch (mType)
+    {
+    case Eagle:
+        return Category::PlayerAircraft;
+
+    default:
+        return Category::EnemyAircraft;
     }
 }
 Aircraft::~Aircraft()

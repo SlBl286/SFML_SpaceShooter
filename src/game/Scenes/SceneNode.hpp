@@ -1,7 +1,7 @@
 #pragma once
 #include "../Resource.hpp"
 #include <vector>
-
+#include "../Command.hpp"
 class SceneNode : public sf::Transformable, public sf::Drawable, private sf::NonCopyable
 {
     // data
@@ -10,15 +10,17 @@ public:
 
 private:
     std::vector<Ptr> mChildren;
-    SceneNode*       mParent;
+    SceneNode *mParent;
     // function
 private:
-    virtual void     draw(sf::RenderTarget &target, sf::RenderStates states) const final;
-    virtual void     drawCurrent(sf::RenderTarget &target, sf::RenderStates states) const;
-    virtual void     updateCurrent(sf::Time dt);
-    virtual void     updateChildren(sf::Time dt);
+    virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const final;
+    virtual void drawCurrent(sf::RenderTarget &target, sf::RenderStates states) const;
+    virtual void updateCurrent(sf::Time dt);
+    virtual void updateChildren(sf::Time dt);
+    virtual unsigned int getCategory() const;
 
 public:
+    void onCommand(const Command &command, sf::Time dt);
     void update(sf::Time dt);
     void attachChild(Ptr child);
     Ptr detachChild(const SceneNode &node);
@@ -54,8 +56,8 @@ void SceneNode::updateChildren(sf::Time dt)
     for (const Ptr &child : mChildren)
         child->update(dt);
 }
-void SceneNode::drawCurrent(sf::RenderTarget &target, sf::RenderStates states) const {
-    
+void SceneNode::drawCurrent(sf::RenderTarget &target, sf::RenderStates states) const
+{
 }
 void SceneNode::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
@@ -82,7 +84,20 @@ SceneNode::Ptr SceneNode::detachChild(const SceneNode &node)
     mChildren.erase(found);
     return result;
 }
+unsigned int SceneNode::getCategory() const
+{
+    return Category::Scene;
+}
 
+void SceneNode::onCommand(const Command &command, sf::Time dt)
+{
+    if (command.category & getCategory())
+        command.action(*this, dt);
+    for (auto &&child : mChildren)
+    {
+        child->onCommand(command, dt);
+    }
+}
 SceneNode::SceneNode() : mParent(nullptr)
 {
 }
