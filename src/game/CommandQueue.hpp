@@ -11,12 +11,21 @@ private:
 public:
     void push(const Command &command);
     bool isEmpty() const;
-    Command pop();
-    CommandQueue(/* args */);
+    Command& pop();
+    CommandQueue();
     ~CommandQueue();
 };
-
-CommandQueue::CommandQueue(/* args */)
+void CommandQueue::push(const Command &command)
+{
+}
+bool CommandQueue::isEmpty() const
+{
+}
+Command& CommandQueue::pop()
+{
+    
+}
+CommandQueue::CommandQueue() 
 {
 }
 

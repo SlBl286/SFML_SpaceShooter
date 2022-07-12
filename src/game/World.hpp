@@ -37,7 +37,7 @@ private:
 
 public:
     explicit World(sf::RenderWindow &window);
-    CommandQueue& getCommandQueue();
+    CommandQueue &getCommandQueue();
     void update(sf::Time dt);
     void draw();
 
@@ -117,7 +117,8 @@ void World::draw()
     mWindow.draw(mSceneGraph);
 }
 
-CommandQueue& World::getCommandQueue(){
+CommandQueue &World::getCommandQueue()
+{
     return mCommandQueue;
 }
 World::~World()

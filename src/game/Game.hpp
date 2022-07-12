@@ -4,6 +4,7 @@
 #include "Entities/Aircraft.hpp"
 #include <World.hpp>
 #include <Player.hpp>
+#include "AircraftMover.hpp"
 namespace Qy
 {
     class Game
@@ -33,6 +34,9 @@ namespace Qy
                             playerSpeed(200.f),
                             mIsPause(false)
     {
+        Command moveLeft;
+        moveLeft.category = Category::PlayerAircraft;
+        moveLeft.action = AircraftMover(-playerSpeed, 0.f);
     }
 
     Game::~Game()

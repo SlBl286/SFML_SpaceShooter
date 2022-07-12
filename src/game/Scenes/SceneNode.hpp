@@ -1,7 +1,8 @@
 #pragma once
 #include "../Resource.hpp"
 #include <vector>
-#include "../Command.hpp"
+#include "../Category.hpp"
+struct Command;
 class SceneNode : public sf::Transformable, public sf::Drawable, private sf::NonCopyable
 {
     // data
@@ -20,7 +21,7 @@ private:
     virtual unsigned int getCategory() const;
 
 public:
-    void onCommand(const Command &command, sf::Time dt);
+    void onCommand(Command &command, sf::Time dt);
     void update(sf::Time dt);
     void attachChild(Ptr child);
     Ptr detachChild(const SceneNode &node);
@@ -29,6 +30,7 @@ public:
     SceneNode();
     ~SceneNode();
 };
+#include "../Command.hpp"
 sf::Transform SceneNode::getWorldTransform() const
 {
     sf::Transform transform = sf::Transform::Identity;
@@ -89,7 +91,7 @@ unsigned int SceneNode::getCategory() const
     return Category::Scene;
 }
 
-void SceneNode::onCommand(const Command &command, sf::Time dt)
+void SceneNode::onCommand(Command &command, sf::Time dt)
 {
     if (command.category & getCategory())
         command.action(*this, dt);

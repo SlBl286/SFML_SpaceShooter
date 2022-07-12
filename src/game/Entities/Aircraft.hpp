@@ -36,6 +36,7 @@ Aircraft::Aircraft(Type type, const TextureHolder &textures) : mType(type), mSpr
     sf::FloatRect bounds = mSprite.getLocalBounds();
     mSprite.setScale(0.5f, 0.5f);
     mSprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+   
 }
 ResourceId::Textures Aircraft::toTextureID(Aircraft::Type type)
 {
